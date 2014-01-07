@@ -17,7 +17,6 @@ class newVisitorTest(unittest.TestCase):
 
         # Check that the page title is correct.
         self.assertIn('To-Do', self.browser.title)
-        self.fail('Finish this test!')
 
 
 if __name__ == '__main__':
