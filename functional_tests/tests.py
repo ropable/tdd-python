@@ -1,9 +1,9 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
 
 
-class newVisitorTest(unittest.TestCase):
+class newVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -19,12 +19,10 @@ class newVisitorTest(unittest.TestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Open the application home page.
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # Check that the page title is correct.
         self.assertIn('To-Do', self.browser.title)
-
-        self.browser.get('http://localhost:8000')
 
         # Check that any input field is present, with placeholder text.
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -52,6 +50,3 @@ class newVisitorTest(unittest.TestCase):
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
 
         self.fail('Finish the test!')
-
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
