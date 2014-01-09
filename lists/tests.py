@@ -25,19 +25,19 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
 
-    def test_home_page_can_save_post_request(self):
+    def test_home_page_can_save_a_post_request(self):
         request = HttpRequest()
         request.method = 'POST'
         request.POST['item_text'] = 'A new list item'
 
         response = home_page(request)
 
-        #self.assertIn('A new list item', response.content.decode())
-        expected_html = render_to_string(
-            'home.html',
-            {'new_item_text': 'A new list item'}
-        )
-        self.assertEqual(response.content.decode(), expected_html)
+        self.assertEqual(Item.objects.all().count(), 1)
+        new_item = Item.objects.all()[0]
+        self.assertEqual(new_item.text, 'A new list item')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
 
     def test_saving_and_retrieving_items(self):
         first_item = Item()
@@ -55,3 +55,8 @@ class HomePageTest(TestCase):
         second_saved_item = saved_items[1]
         self.assertEqual(first_saved_item.text, 'The first (ever) list item')
         self.assertEqual(second_saved_item.text, 'Item the second')
+
+    def test_home_page_only_saves_items_when_necessary(self):
+        request = HttpRequest()
+        home_page(request)
+        self.assertEqual(Item.objects.all().count(), 0)
