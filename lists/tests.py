@@ -124,9 +124,6 @@ class NewItemTest(TestCase):
         other_list = List.objects.create()
         correct_list = List.objects.create()
 
-        response = self.client.get('/lists/{0}/new_item'.format(correct_list.pk))
-
-        print(correct_list)
-        print(response.context)
+        response = self.client.get('/lists/{0}/'.format(correct_list.pk))
 
         self.assertEqual(response.context['list'], correct_list)
