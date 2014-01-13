@@ -70,8 +70,6 @@ class newVisitorTest(LiveServerTestCase):
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertIn('Buy milk', page_text)
 
-        self.fail('Finish the test!')
-
     def test_layout_and_styling(self):
         self.browser.get(self.live_server_url)
         self.browser.set_window_size(1024, 768)
