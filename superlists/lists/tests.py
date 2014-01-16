@@ -32,7 +32,7 @@ class ListViewTest(TestCase):
 class HomePageTest(TestCase):
 
     def test_root_url_resolves_to_home_page_view(self):
-        found = resolve('/')
+        found = resolve('/lists/')
         self.assertEqual(found.func, home_page)
 
     def test_home_page_returns_correct_html(self):
@@ -40,7 +40,7 @@ class HomePageTest(TestCase):
 
         response = home_page(request)
 
-        self.assertTrue(response.content.startswith(b'<html>'))
+        self.assertTrue(response.content.startswith(b'<!DOCTYPE html>'))
         self.assertIn(b'<title>To-Do lists</title>', response.content)
         self.assertTrue(response.content.strip().endswith(b'</html>'))
         # Use decode() to convert the response.content bytes into a unicode
@@ -91,7 +91,8 @@ class NewListTest(TestCase):
         self.assertEqual(List.objects.all().count(), 1)
 
     def test_redirects_after_POST(self):
-        response = self.client.post('/lists/new', data={'item_text': 'A new list item'})
+        response = self.client.post(
+            '/lists/new', data={'item_text': 'A new list item'})
         new_list = List.objects.all()[0]
         self.assertRedirects(response, '/lists/{0}/'.format(new_list.pk))
 

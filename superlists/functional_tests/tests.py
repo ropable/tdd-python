@@ -34,14 +34,15 @@ class NewVisitorTest(LiveServerTestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Open the application home page.
-        self.browser.get(self.server_url)
+        self.browser.get(self.server_url + '/lists')
 
         # Check that the page title is correct.
         self.assertIn('To-Do', self.browser.title)
 
         # Check that any input field is present, with placeholder text.
         inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter a to-do item')
+        self.assertEqual(inputbox.get_attribute('placeholder'),
+                         'Enter a to-do item')
 
         # Edith inputs a to-do item and presses ENTER to submit the form.
         inputbox.send_keys('Buy peacock feathers')
@@ -57,7 +58,8 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys('Use peacock feathers to make a fly')
         inputbox.send_keys(Keys.ENTER)
         self.check_for_row_in_list_table('1: Buy peacock feathers')
-        self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
+        self.check_for_row_in_list_table(
+            '2: Use peacock feathers to make a fly')
 
         # A new user, Francis, visits the site. We use a new browser session
         # for this user.
@@ -65,8 +67,10 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser = webdriver.Firefox()
 
         # Visit the home page. There is no sign of Edit's list.
-        self.browser.get(self.server_url)
+        self.browser.get(self.server_url + '/lists')
+
         page_text = self.browser.find_element_by_tag_name('body').text
+
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertNotIn('make a fly', page_text)
 
@@ -86,7 +90,8 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('Buy milk', page_text)
 
     def test_layout_and_styling(self):
-        self.browser.get(self.server_url)
+        self.browser.get(self.server_url + '/lists')
+
         self.browser.set_window_size(1024, 768)
 
         inputbox = self.browser.find_element_by_tag_name('input')
