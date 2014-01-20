@@ -1,8 +1,11 @@
 from django.db import models
+from django.shortcuts import resolve_url
 
 
 class List(models.Model):
-    pass
+
+    def get_absolute_url(self):
+        return resolve_url('view_list', self.pk)
 
 
 class Item(models.Model):
