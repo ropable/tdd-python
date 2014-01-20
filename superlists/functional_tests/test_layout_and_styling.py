@@ -4,7 +4,7 @@ from functional_tests.base import FunctionalTest
 class LayoutAndStylingTest(FunctionalTest):
 
     def test_layout_and_styling(self):
-        self.browser.get(self.server_url + '/lists')
+        self.browser.get(self.server_url)
 
         self.browser.set_window_size(1024, 768)
 

@@ -7,7 +7,7 @@ class NewVisitorTest(FunctionalTest):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Open the application home page.
-        self.browser.get(self.server_url + '/lists')
+        self.browser.get(self.server_url)
 
         # Check that the page title is correct.
         self.assertIn('To-Do', self.browser.title)
@@ -40,7 +40,7 @@ class NewVisitorTest(FunctionalTest):
         self.browser = webdriver.Firefox()
 
         # Visit the home page. There is no sign of Edit's list.
-        self.browser.get(self.server_url + '/lists')
+        self.browser.get(self.server_url)
 
         page_text = self.browser.find_element_by_tag_name('body').text
 

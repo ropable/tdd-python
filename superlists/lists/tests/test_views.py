@@ -61,11 +61,22 @@ class ListViewTest(TestCase):
 
         self.assertRedirects(response, '/lists/{0}/'.format(correct_list.pk))
 
+    def test_validation_errors_end_up_on_lists_page(self):
+        listey = List.objects.create()
+
+        response = self.client.post(
+            '/lists/{0}/'.format(listey.pk), data={'item_text': ''})
+
+        self.assertEqual(Item.objects.all().count(), 0)
+        self.assertTemplateUsed(response, 'list.html')
+        expected_error = escape("You can't have an empty list item")
+        self.assertContains(response, expected_error)
+
 
 class HomePageTest(TestCase):
 
     def test_root_url_resolves_to_home_page_view(self):
-        found = resolve('/lists/')
+        found = resolve('/')
         self.assertEqual(found.func, home_page)
 
     def test_home_page_returns_correct_html(self):
