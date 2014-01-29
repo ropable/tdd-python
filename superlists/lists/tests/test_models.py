@@ -5,6 +5,15 @@ from lists.models import Item, List
 
 class ListAndItemModelsTest(TestCase):
 
+    def test_get_absolute_url(self):
+        list1 = List.objects.create()
+        self.assertEqual(list1.get_absolute_url(), '/lists/{0}/'.format(list1.pk))
+
+    def test_string_representation(self):
+        list1 = List.objects.create()
+        item1 = Item.objects.create(list=list1, text='some text')
+        self.assertEqual(str(item1), item1. text)
+
     def test_saving_and_retrieving_items(self):
         list_ = List()
         list_.save()
@@ -38,6 +47,21 @@ class ListAndItemModelsTest(TestCase):
         with self.assertRaises(ValidationError):
             item.save()
 
-    def tests_get_absolute_url(self):
+    def test_list_ordering(self):
         list1 = List.objects.create()
-        self.assertEqual(list1.get_absolute_url(), '/lists/{0}/'.format(list1.pk))
+        item1 = Item.objects.create(list=list1, text='i1')
+        item2 = Item.objects.create(list=list1, text='item 2')
+        item3 = Item.objects.create(list=list1, text='3')
+        self.assertEqual(list(Item.objects.all()), [item1, item2, item3])
+
+    def test_cannot_save_duplicate_items(self):
+        list1 = List.objects.create()
+        Item.objects.create(list=list1, text='bla')
+        with self.assertRaises(ValidationError):
+            Item.objects.create(list=list1, text='bla')
+
+    def test_can_save_same_items_to_different_lists(self):
+        list1 = List.objects.create()
+        list2 = List.objects.create()
+        Item.objects.create(list=list1, text='bla')
+        Item.objects.create(list=list2, text='bla')  # Won't raise error.
