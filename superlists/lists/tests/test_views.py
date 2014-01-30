@@ -3,7 +3,8 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.test import TestCase
 from django.utils.html import escape
-from lists.forms import ItemForm, EMPTY_LIST_ERROR
+from lists.forms import (
+    ItemForm, ExistingListItemForm, EMPTY_LIST_ERROR, DUPLICATE_ITEM_ERROR)
 from lists.models import Item, List
 from lists.views import home_page
 from unittest import skip
@@ -66,7 +67,7 @@ class ListViewTest(TestCase):
     def test_displays_item_form(self):
         list_ = List.objects.create()
         response = self.client.get('/lists/{0}/'.format(list_.pk))
-        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertIsInstance(response.context['form'], ExistingListItemForm)
         self.assertContains(response, 'name="text"')
 
     def post_invalid_input(self):
@@ -85,7 +86,7 @@ class ListViewTest(TestCase):
 
     def test_invalid_input_renders_form_with_errors(self):
         response = self.post_invalid_input()
-        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertIsInstance(response.context['form'], ExistingListItemForm)
         self.assertContains(response, escape(EMPTY_LIST_ERROR))
 
     def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
@@ -95,7 +96,7 @@ class ListViewTest(TestCase):
             '/lists/{0}/'.format(list1.pk),
             data={'text': 'textey'}
         )
-        expected_error = escape("You've already got this in your list")
+        expected_error = escape(DUPLICATE_ITEM_ERROR)
         self.assertContains(response, expected_error)
         self.assertTemplateUsed(response, 'list.html')
         self.assertEqual(Item.objects.all().count(), 1)
