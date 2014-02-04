@@ -9,7 +9,7 @@ SITES_FOLDER = '/var/www'
 def deploy():
     # env.host will contain the address of the host that we
     # specify at the command line, e.g.:
-    # fab deploy:host=superlists-staging.almosttaken.in
+    # fab deploy:host=superlists-staging
     _create_directory_structure_if_necessary(env.host)
     source_folder = '{0}/{1}/source'.format(SITES_FOLDER, env.host)
     _get_latest_source(source_folder)
