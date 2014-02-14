@@ -5,6 +5,5 @@
 staticfiles/
 media/
 db.sqlite3
-static/
 .ropeproject/
 *.log
